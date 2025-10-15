@@ -1,20 +1,20 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+// React Imports
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+// MUI Imports
+import { styled, useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import PushPinIcon from '@mui/icons-material/PushPin';
 import {
-  Box,
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  IconButton,
-  Typography,
-  useMediaQuery,
-  useTheme as useMuiTheme,
-} from '@mui/material';
-import {
-  Menu as MenuIcon,
-  ChevronLeft as ChevronLeftIcon,
   Dashboard,
   Home,
   Info,
@@ -24,7 +24,14 @@ import {
   PersonAdd,
   Settings,
 } from '@mui/icons-material';
-import { navigationItems, navigationConfig } from '../../config/navigation';
+
+// Hook Imports
+import { useNavigation } from '../../hooks/useNavigation';
+
+// Config Imports
+import { navigationItems as menuItems, navigationConfig } from '../../config/navigation';
+
+const { navWidth: drawerWidth, collapsedWidth } = navigationConfig;
 
 // Icon mapping
 const iconMap: { [key: string]: React.ReactNode } = {
@@ -38,147 +45,195 @@ const iconMap: { [key: string]: React.ReactNode } = {
   Settings: <Settings />,
 };
 
+const StyledDrawer = styled(Drawer)(({ theme }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  '& .MuiDrawer-paper': {
+    width: drawerWidth,
+    transition: theme.transitions.create(['width', 'box-shadow'], {
+      duration: theme.transitions.duration.shorter
+    }),
+    overflowX: 'hidden',
+    backgroundColor: theme.palette.background.paper,
+    borderRight: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.down('lg')]: {
+      position: 'fixed'
+    }
+  }
+}));
+
 interface NavigationProps {
   open?: boolean;
   onClose?: () => void;
 }
 
-export const Navigation = ({ open: controlledOpen, onClose }: NavigationProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const muiTheme = useMuiTheme();
+export const Navigation: React.FC<NavigationProps> = ({ open = false, onClose }) => {
   const location = useLocation();
-  const isMobile = useMediaQuery(muiTheme.breakpoints.down('lg'));
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const {
+    isCollapsed,
+    isHovered,
+    isBreakpointReached,
+    isPinned,
+    // toggleCollapse,
+    togglePin,
+    handleMouseEnter,
+    handleMouseLeave
+  } = useNavigation();
 
-  const { navWidth, collapsedWidth } = navigationConfig;
-  const navigationWidth = isCollapsed ? collapsedWidth : navWidth;
-
-  const handleToggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    // Close mobile drawer on navigation
+    if (isBreakpointReached && onClose) {
+      onClose();
+    }
   };
 
-  const NavigationContent = (
-    <Box
-      sx={{
-        width: navigationWidth,
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        bgcolor: 'background.paper',
-        borderRight: 1,
-        borderColor: 'divider',
-        transition: 'width 0.25s ease-in-out',
-        flexShrink: 0,
+  const effectiveWidth = isCollapsed && !isHovered ? collapsedWidth : drawerWidth;
+
+  const drawer = (
+    <Box 
+      sx={{ 
+        height: '100%', 
+        display: 'flex', 
+        flexDirection: 'column'
       }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {/* Header */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          p: 2,
-          borderBottom: 1,
-          borderColor: 'divider',
-          minHeight: 64,
-        }}
-      >
-        {!isCollapsed && (
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 700,
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Your App
-          </Typography>
-        )}
-        {!isMobile && (
-          <IconButton onClick={handleToggleCollapse} size="small">
-            {isCollapsed ? <MenuIcon /> : <ChevronLeftIcon />}
-          </IconButton>
+      <Box sx={{ 
+        p: 2, 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between',
+        minHeight: 64
+      }}>
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            color: 'primary.main', 
+            fontWeight: 600,
+            opacity: isCollapsed && !isHovered ? 0 : 1,
+            transition: theme => theme.transitions.create('opacity')
+          }}
+        >
+          React Dashboard
+        </Typography>
+        {!isBreakpointReached && (
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <IconButton onClick={togglePin} sx={{ color: isPinned ? 'primary.main' : 'text.secondary' }}>
+              <PushPinIcon sx={{ transform: isPinned ? 'none' : 'rotate(45deg)' }} />
+            </IconButton>
+            {/* <IconButton onClick={toggleCollapse}>
+              {isCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton> */}
+          </Box>
         )}
       </Box>
-
-      {/* Navigation Items */}
-      <List sx={{ flex: 1, py: 1, overflow: 'auto' }}>
-        {navigationItems.map((item) => {
-          // Skip items with children (no submenu support in simple version)
-          if (item.children) return null;
-          
-          const isActive = location.pathname === item.path;
-          const icon = item.icon ? iconMap[item.icon] : null;
-
-          return (
-            <ListItemButton
-              key={item.title}
-              component={Link}
-              to={item.path || '#'}
-              onClick={isMobile ? onClose : undefined}
-              sx={{
-                minHeight: 48,
-                justifyContent: isCollapsed ? 'center' : 'flex-start',
-                px: 2.5,
-                mx: 1,
-                borderRadius: 1,
-                bgcolor: isActive ? 'primary.main' : 'transparent',
-                color: isActive ? 'primary.contrastText' : 'text.primary',
-                '&:hover': {
-                  bgcolor: isActive ? 'primary.dark' : 'action.hover',
-                },
-              }}
-            >
-              {icon && (
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: isCollapsed ? 0 : 3,
+      <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+        <List component="nav" sx={{ px: 2 }}>
+          {menuItems.map((item) => (
+            <ListItem key={item.title} disablePadding sx={{ mb: 1 }}>
+              <ListItemButton
+                sx={{
+                  py: 1.5,
+                  px: 2,
+                  borderRadius: 1,
+                  minHeight: 48,
+                  justifyContent: isCollapsed && !isHovered ? 'center' : 'flex-start',
+                  '&.active': {
+                    backgroundColor: theme.palette.primary.main + '14',
+                    '& .MuiListItemIcon-root, & .MuiTypography-root': {
+                      color: 'primary.main'
+                    }
+                  },
+                  '&:hover': {
+                    backgroundColor: theme.palette.action.hover,
+                    borderRadius: 1
+                  }
+                }}
+                className={location.pathname === item.path ? 'active' : ''}
+                onClick={() => handleNavigation(item.path || '')}
+              >
+                <ListItemIcon 
+                  sx={{ 
+                    minWidth: isCollapsed && !isHovered ? 0 : 40,
+                    mr: isCollapsed && !isHovered ? 0 : 2,
                     justifyContent: 'center',
-                    color: isActive ? 'primary.contrastText' : 'text.secondary',
+                    color: location.pathname === item.path ? 'primary.main' : 'text.secondary'
                   }}
                 >
-                  {icon}
+                  {item.icon && iconMap[item.icon]}
                 </ListItemIcon>
-              )}
-              {!isCollapsed && (
-                <ListItemText 
+                <ListItemText
                   primary={item.title}
+                  sx={{
+                    opacity: isCollapsed && !isHovered ? 0 : 1,
+                    transition: theme => theme.transitions.create('opacity')
+                  }}
                   primaryTypographyProps={{
+                    noWrap: true,
                     fontSize: '0.875rem',
-                    fontWeight: isActive ? 600 : 400,
+                    fontWeight: location.pathname === item.path ? 600 : 400,
+                    color: location.pathname === item.path ? 'primary.main' : 'text.secondary'
                   }}
                 />
-              )}
-            </ListItemButton>
-          );
-        })}
-      </List>
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
     </Box>
   );
 
-  // Mobile Drawer
-  if (isMobile) {
-    return (
+  return (
+    <Box
+      component="nav"
+      sx={{
+        flexShrink: 0,
+        [theme.breakpoints.up('lg')]: {
+          width: effectiveWidth,
+          transition: theme.transitions.create('width')
+        }
+      }}
+    >
+      {/* Mobile navigation drawer */}
       <Drawer
-        anchor="left"
-        open={controlledOpen}
-        onClose={onClose}
         variant="temporary"
+        open={open}
+        onClose={onClose}
         ModalProps={{
-          keepMounted: true,
+          keepMounted: true // Better open performance on mobile
         }}
         sx={{
+          display: { xs: 'block', lg: 'none' },
           '& .MuiDrawer-paper': {
-            width: navWidth,
-            boxSizing: 'border-box',
-          },
+            width: drawerWidth,
+            backgroundColor: 'background.paper',
+            boxShadow: theme.shadows[8]
+          }
         }}
       >
-        {NavigationContent}
+        {drawer}
       </Drawer>
-    );
-  }
 
-  // Desktop Sidebar
-  return NavigationContent;
+      {/* Desktop navigation drawer */}
+      <StyledDrawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', lg: 'block' },
+          '& .MuiDrawer-paper': {
+            width: effectiveWidth,
+            transform: 'none',
+            visibility: 'visible'
+          }
+        }}
+      >
+        {drawer}
+      </StyledDrawer>
+    </Box>
+  );
 };

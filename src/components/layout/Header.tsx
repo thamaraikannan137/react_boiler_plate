@@ -1,7 +1,15 @@
-import { Box, Typography, Chip } from '@mui/material';
+import React from 'react';
+import { Box, Typography, Chip, IconButton, useTheme, useMediaQuery } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useAppSelector } from '../../store';
 
-export const Header = () => {
+interface HeaderProps {
+  onDrawerToggle?: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onDrawerToggle }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const user = useAppSelector((state) => state.auth.user);
 
@@ -15,9 +23,24 @@ export const Header = () => {
         py: 2,
       }}
     >
-      <Typography variant="h6" component="h1">
-        Dashboard
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        {isMobile && onDrawerToggle && (
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={onDrawerToggle}
+            sx={{
+              mr: 1
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+        <Typography variant="h6" component="h1">
+          Dashboard
+        </Typography>
+      </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         {isAuthenticated ? (
