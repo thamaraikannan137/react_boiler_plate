@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button, Input } from '../common';
+import { MuiButton, MuiInput } from '../common';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { login } from '../../store/slices/authSlice';
 
@@ -51,7 +51,7 @@ export const LoginForm = () => {
         </div>
       )}
 
-      <Input
+      <MuiInput
         {...register('email')}
         type="email"
         label="Email"
@@ -59,7 +59,7 @@ export const LoginForm = () => {
         error={errors.email?.message}
       />
 
-      <Input
+      <MuiInput
         {...register('password')}
         type="password"
         label="Password"
@@ -79,14 +79,14 @@ export const LoginForm = () => {
         </label>
       </div>
 
-      <Button
+      <MuiButton
         type="submit"
         className="w-full"
         isLoading={loading}
         disabled={loading}
       >
         Sign In
-      </Button>
+      </MuiButton>
     </form>
   );
 };

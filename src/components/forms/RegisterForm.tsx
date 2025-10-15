@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button, Input } from '../common';
+import { MuiButton, MuiInput } from '../common';
 
 // Define validation schema
 const registerSchema = z.object({
@@ -52,7 +52,7 @@ export const RegisterForm = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-w-md mx-auto">
       <h2 className="text-2xl font-bold text-gray-900">Create Account</h2>
 
-      <Input
+      <MuiInput
         {...register('name')}
         type="text"
         label="Full Name"
@@ -60,7 +60,7 @@ export const RegisterForm = () => {
         error={errors.name?.message}
       />
 
-      <Input
+      <MuiInput
         {...register('email')}
         type="email"
         label="Email"
@@ -68,7 +68,7 @@ export const RegisterForm = () => {
         error={errors.email?.message}
       />
 
-      <Input
+      <MuiInput
         {...register('password')}
         type="password"
         label="Password"
@@ -77,7 +77,7 @@ export const RegisterForm = () => {
         helperText="Must be at least 8 characters with uppercase, lowercase, and number"
       />
 
-      <Input
+      <MuiInput
         {...register('confirmPassword')}
         type="password"
         label="Confirm Password"
@@ -85,14 +85,14 @@ export const RegisterForm = () => {
         error={errors.confirmPassword?.message}
       />
 
-      <Button
+      <MuiButton
         type="submit"
         className="w-full"
         isLoading={isSubmitting}
         disabled={isSubmitting}
       >
         Register
-      </Button>
+      </MuiButton>
     </form>
   );
 };

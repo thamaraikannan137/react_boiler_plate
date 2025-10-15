@@ -1,4 +1,4 @@
-import { Button, Card } from '../components/common';
+import { Button, MuiCard } from '../components/common';
 import { useAppDispatch, useAppSelector } from '../store';
 import { increment, decrement, incrementByAmount, reset } from '../store/slices/counterSlice';
 
@@ -10,7 +10,7 @@ export const CounterPage = () => {
     <div className="space-y-6">
       <h1 className="text-4xl font-bold text-gray-900">Redux Counter Example</h1>
       
-      <Card>
+      <MuiCard>
         <div className="text-center space-y-6">
           <div>
             <p className="text-sm text-gray-600 mb-2">Current Count</p>
@@ -32,7 +32,7 @@ export const CounterPage = () => {
             </Button>
           </div>
         </div>
-      </Card>
+      </MuiCard>
     </div>
   );
 };

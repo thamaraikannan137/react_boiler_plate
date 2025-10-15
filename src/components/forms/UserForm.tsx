@@ -1,7 +1,7 @@
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Button, Input } from '../common';
+import { MuiButton, MuiInput } from '../common';
 
 // Define validation schema
 const userSchema = z.object({
@@ -48,7 +48,7 @@ export const UserForm = ({ defaultValues, onSubmit }: UserFormProps) => {
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 max-w-md mx-auto">
       <h2 className="text-2xl font-bold text-gray-900">User Form</h2>
 
-      <Input
+      <MuiInput
         {...register('name')}
         type="text"
         label="Name"
@@ -56,7 +56,7 @@ export const UserForm = ({ defaultValues, onSubmit }: UserFormProps) => {
         error={errors.name?.message}
       />
 
-      <Input
+      <MuiInput
         {...register('email')}
         type="email"
         label="Email"
@@ -64,7 +64,7 @@ export const UserForm = ({ defaultValues, onSubmit }: UserFormProps) => {
         error={errors.email?.message}
       />
 
-      <Input
+      <MuiInput
         {...register('age', { valueAsNumber: true })}
         type="number"
         label="Age"
@@ -110,14 +110,14 @@ export const UserForm = ({ defaultValues, onSubmit }: UserFormProps) => {
         )}
       </div>
 
-      <Button
+      <MuiButton
         type="submit"
         className="w-full"
         isLoading={isSubmitting}
         disabled={isSubmitting}
       >
         Submit
-      </Button>
+      </MuiButton>
     </form>
   );
 };

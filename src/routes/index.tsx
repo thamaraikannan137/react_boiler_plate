@@ -1,15 +1,16 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { MainLayout } from '../components/layout';
-import { HomePage } from '../pages/HomePage';
-import { AboutPage } from '../pages/AboutPage';
-import { LoginPage } from '../pages/LoginPage';
-import { RegisterPage } from '../pages/RegisterPage';
-import { CounterPage } from '../pages/CounterPage';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { MainLayout } from "../components/layout";
+import { HomePage } from "../pages/HomePage";
+import { AboutPage } from "../pages/AboutPage";
+import { LoginPage } from "../pages/LoginPage";
+import { RegisterPage } from "../pages/RegisterPage";
+import { CounterPage } from "../pages/CounterPage";
+import { ThemeExamplePage } from "../pages/ThemeExamplePage";
 
 const router = createBrowserRouter([
   {
     // Routes with MainLayout
-    path: '/',
+    path: "/",
     element: <MainLayout />,
     children: [
       {
@@ -17,22 +18,26 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: 'about',
+        path: "about",
         element: <AboutPage />,
       },
       {
-        path: 'counter',
+        path: "counter",
         element: <CounterPage />,
+      },
+      {
+        path: "theme-example",
+        element: <ThemeExamplePage />,
       },
     ],
   },
   {
     // Routes without layout (standalone pages)
-    path: '/login',
+    path: "/login",
     element: <LoginPage />,
   },
   {
-    path: '/register',
+    path: "/register",
     element: <RegisterPage />,
   },
   // Add more routes here
@@ -41,4 +46,3 @@ const router = createBrowserRouter([
 export const AppRouter = () => {
   return <RouterProvider router={router} />;
 };
-
