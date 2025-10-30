@@ -15,9 +15,8 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import { Controller, useForm } from 'react-hook-form';
-import type { Resolver } from 'react-hook-form';
-import { object, string, email as vEmail, minLength, nonEmpty, pipe, trim } from 'valibot';
-import { valibotResolver } from '@hookform/resolvers/valibot';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 // Icons
 import Visibility from '@mui/icons-material/Visibility';
@@ -45,15 +44,15 @@ const LoginIllustration = styled('img')(({ theme }) => ({
 const CustomTextField = styled(TextField)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
     '&.Mui-focused': {
-      boxShadow: `0 0 0 2px ${theme.palette.primary.main}1f`
+      boxShadow: `0 0 0 0 ${theme.palette.primary.main}1f`
     }
   }
 }));
 
-// Validation Schema (Valibot)
-const loginSchema = object({
-  email: pipe(string(), trim(), minLength(1, 'This field is required'), vEmail('Please enter a valid email address')),
-  password: pipe(string(), trim(), nonEmpty('This field is required'), minLength(5, 'Password must be at least 5 characters long'))
+// Validation Schema (Zod)
+const loginSchema = z.object({
+  email: z.string().trim().min(1, 'This field is required').email('Please enter a valid email address'),
+  password: z.string().trim().min(1, 'This field is required').min(5, 'Password must be at least 5 characters long')
 });
 
 export const LoginPage = () => {
@@ -66,9 +65,8 @@ export const LoginPage = () => {
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show);
 
-  const resolver = valibotResolver(loginSchema) as unknown as Resolver<{ email: string; password: string }>;
-  const { control, handleSubmit, formState: { errors } } = useForm<{ email: string; password: string }>({
-    resolver,
+  const { control, handleSubmit, formState: { errors } } = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' }
   });
 
