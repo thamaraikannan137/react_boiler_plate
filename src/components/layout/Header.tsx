@@ -11,7 +11,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAppSelector } from '../../store';
 import { navigationItems } from '../../config/navigation';
-import { CustomAvatar, ThemeToggle } from '../common';
+import { CustomAvatar, ThemeToggle, NavSearch } from '../common';
 
 interface HeaderProps {
   onDrawerToggle?: () => void;
@@ -60,6 +60,9 @@ export const Header: React.FC<HeaderProps> = ({ onDrawerToggle }) => {
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        {/* Search */}
+        <NavSearch />
+        
         {/* Theme Toggle Icon */}
         <ThemeToggle />
         

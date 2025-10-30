@@ -13,7 +13,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
-import PushPinIcon from '@mui/icons-material/PushPin';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import {
   Dashboard,
   Home,
@@ -53,7 +54,8 @@ const StyledDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
     width: drawerWidth,
     transition: theme.transitions.create(['width', 'box-shadow'], {
-      duration: theme.transitions.duration.shorter
+      duration: theme.transitions.duration.standard,
+      easing: theme.transitions.easing.easeInOut
     }),
     overflowX: 'hidden',
     backgroundColor: theme.palette.background.paper,
@@ -117,7 +119,10 @@ export const Navigation: React.FC<NavigationProps> = ({ open = false, onClose })
             color: 'primary.main', 
             fontWeight: 600,
             opacity: isCollapsed && !isHovered ? 0 : 1,
-            transition: theme => theme.transitions.create('opacity')
+            transition: theme => theme.transitions.create('opacity', {
+              duration: theme.transitions.duration.standard,
+              easing: theme.transitions.easing.easeInOut
+            })
           }}
         >
           React Dashboard
@@ -125,7 +130,11 @@ export const Navigation: React.FC<NavigationProps> = ({ open = false, onClose })
         {!isBreakpointReached && (
           <Box sx={{ display: 'flex', gap: 1 }}>
             <IconButton onClick={togglePin} sx={{ color: isPinned ? 'primary.main' : 'text.secondary' }}>
-              <PushPinIcon sx={{ transform: isPinned ? 'none' : 'rotate(45deg)' }} />
+              {isPinned ? (
+                <RadioButtonCheckedIcon />
+              ) : (
+                <RadioButtonUncheckedIcon />
+              )}
             </IconButton>
             {/* <IconButton onClick={toggleCollapse}>
               {isCollapsed ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -144,6 +153,10 @@ export const Navigation: React.FC<NavigationProps> = ({ open = false, onClose })
                   borderRadius: 1,
                   minHeight: 48,
                   justifyContent: isCollapsed && !isHovered ? 'center' : 'flex-start',
+                  transition: theme.transitions.create(['background-color', 'color', 'transform'], {
+                    duration: theme.transitions.duration.standard,
+                    easing: theme.transitions.easing.easeInOut
+                  }),
                   '&.active': {
                     backgroundColor: theme.palette.primary.main + '14',
                     '& .MuiListItemIcon-root, & .MuiTypography-root': {
@@ -163,7 +176,11 @@ export const Navigation: React.FC<NavigationProps> = ({ open = false, onClose })
                     minWidth: isCollapsed && !isHovered ? 0 : 40,
                     mr: isCollapsed && !isHovered ? 0 : 2,
                     justifyContent: 'center',
-                    color: location.pathname === item.path ? 'primary.main' : 'text.secondary'
+                    color: location.pathname === item.path ? 'primary.main' : 'text.secondary',
+                    transition: theme => theme.transitions.create('color', {
+                      duration: theme.transitions.duration.standard,
+                      easing: theme.transitions.easing.easeInOut
+                    })
                   }}
                 >
                   {item.icon && iconMap[item.icon]}
@@ -172,7 +189,10 @@ export const Navigation: React.FC<NavigationProps> = ({ open = false, onClose })
                   primary={item.title}
                   sx={{
                     opacity: isCollapsed && !isHovered ? 0 : 1,
-                    transition: theme => theme.transitions.create('opacity')
+                    transition: theme => theme.transitions.create('opacity', {
+                      duration: theme.transitions.duration.standard,
+                      easing: theme.transitions.easing.easeInOut
+                    })
                   }}
                   primaryTypographyProps={{
                     noWrap: true,
