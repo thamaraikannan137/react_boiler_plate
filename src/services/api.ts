@@ -1,61 +1,100 @@
+import axios from 'axios';
+import type { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
 import { API_BASE_URL } from '../config/constants';
 
-// Generic API client
+// Generic API client using Axios
 class ApiClient {
-  private baseURL: string;
+  private axiosInstance: AxiosInstance;
 
   constructor(baseURL: string = API_BASE_URL) {
-    this.baseURL = baseURL;
-  }
-
-  private async request<T>(
-    endpoint: string,
-    options?: RequestInit
-  ): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`;
-    
-    const config: RequestInit = {
-      ...options,
+    this.axiosInstance = axios.create({
+      baseURL,
       headers: {
         'Content-Type': 'application/json',
-        ...options?.headers,
       },
-    };
+    });
 
-    try {
-      const response = await fetch(url, config);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+    // Request interceptor (add auth tokens, etc.)
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        // Add authentication token if available
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
       }
-      
-      return await response.json();
-    } catch (error) {
-      console.error('API request failed:', error);
-      throw error;
-    }
+    );
+
+    // Response interceptor (handle errors globally)
+    this.axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error: AxiosError) => {
+        // Handle common errors
+        if (error.response) {
+          // Server responded with error status
+          console.error('API Error:', error.response.status, error.response.data);
+          
+          // Handle specific status codes
+          switch (error.response.status) {
+            case 401:
+              // Unauthorized - clear auth and redirect to login
+              localStorage.removeItem('authToken');
+              window.location.href = '/login';
+              break;
+            case 403:
+              console.error('Forbidden access');
+              break;
+            case 404:
+              console.error('Resource not found');
+              break;
+            case 500:
+              console.error('Internal server error');
+              break;
+          }
+        } else if (error.request) {
+          // Request made but no response
+          console.error('No response from server');
+        } else {
+          // Error setting up request
+          console.error('Request setup error:', error.message);
+        }
+        return Promise.reject(error);
+      }
+    );
   }
 
-  async get<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: 'GET' });
+  async get<T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.get<T>(endpoint, config);
+    return response.data;
   }
 
-  async post<T>(endpoint: string, data?: unknown): Promise<T> {
-    return this.request<T>(endpoint, {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
+  async post<T>(endpoint: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.post<T>(endpoint, data, config);
+    return response.data;
   }
 
-  async put<T>(endpoint: string, data?: unknown): Promise<T> {
-    return this.request<T>(endpoint, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    });
+  async put<T>(endpoint: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.put<T>(endpoint, data, config);
+    return response.data;
   }
 
-  async delete<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: 'DELETE' });
+  async patch<T>(endpoint: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.patch<T>(endpoint, data, config);
+    return response.data;
+  }
+
+  async delete<T>(endpoint: string, config?: AxiosRequestConfig): Promise<T> {
+    const response = await this.axiosInstance.delete<T>(endpoint, config);
+    return response.data;
+  }
+
+  // Get the axios instance if you need direct access
+  getAxiosInstance(): AxiosInstance {
+    return this.axiosInstance;
   }
 }
 

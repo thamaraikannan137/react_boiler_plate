@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { User, LoginFormData } from '../../types';
 import { API_ENDPOINTS, STORAGE_KEYS } from '../../config/constants';
+import { apiClient } from '../../services/api';
 
 interface AuthState {
   user: User | null;
@@ -24,18 +25,12 @@ export const login = createAsyncThunk(
   'auth/login',
   async (credentials: LoginFormData, { rejectWithValue }) => {
     try {
-      // Replace with your actual API call
-      const response = await fetch(API_ENDPOINTS.AUTH.LOGIN, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials),
-      });
+      // Use apiClient with axios
+      const data = await apiClient.post<{ user: User; token: string }>(
+        API_ENDPOINTS.AUTH.LOGIN,
+        credentials
+      );
       
-      if (!response.ok) {
-        throw new Error('Login failed');
-      }
-      
-      const data = await response.json();
       localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, data.token);
       return data;
     } catch {
