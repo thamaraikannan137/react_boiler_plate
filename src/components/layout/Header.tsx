@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { 
   Box, 
   Toolbar, 
   Typography, 
-  Chip, 
   IconButton, 
   useTheme, 
   useMediaQuery 
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useAppSelector } from '../../store';
+import { navigationItems } from '../../config/navigation';
+import { CustomAvatar, ThemeToggle } from '../common';
 
 interface HeaderProps {
   onDrawerToggle?: () => void;
@@ -17,9 +19,17 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onDrawerToggle }) => {
   const theme = useTheme();
+  const location = useLocation();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const user = useAppSelector((state) => state.auth.user);
+
+  // Get current page title based on route
+  const pageTitle = useMemo(() => {
+    const currentPath = location.pathname;
+    const currentNavItem = navigationItems.find(item => item.path === currentPath);
+    return currentNavItem?.title || 'Dashboard';
+  }, [location.pathname]);
 
   return (
     <Toolbar
@@ -45,19 +55,34 @@ export const Header: React.FC<HeaderProps> = ({ onDrawerToggle }) => {
           </IconButton>
         )}
         <Typography variant="h6" component="h1" noWrap>
-          Dashboard
+          {pageTitle}
         </Typography>
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        {isAuthenticated ? (
-          <Chip
-            label={`Welcome, ${user?.name || 'User'}`}
-            color="primary"
-            variant="outlined"
-          />
+        {/* Theme Toggle Icon */}
+        <ThemeToggle />
+        
+        {/* User Avatar */}
+        {isAuthenticated && user ? (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Typography variant="body2" sx={{ display: { xs: 'none', sm: 'block' } }}>
+              Welcome, {user.name}
+            </Typography>
+            <CustomAvatar
+              color="primary"
+              skin="light"
+              size={40}
+              src={user.avatar}
+              alt={user.name}
+            >
+              {user.name.charAt(0).toUpperCase()}
+            </CustomAvatar>
+          </Box>
         ) : (
-          <Chip label="Not Authenticated" variant="outlined" />
+          <CustomAvatar color="secondary" skin="light" size={40}>
+            ?
+          </CustomAvatar>
         )}
       </Box>
     </Toolbar>
