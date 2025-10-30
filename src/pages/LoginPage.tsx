@@ -14,6 +14,10 @@ import { styled, useTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import { Controller, useForm } from 'react-hook-form';
+import type { Resolver } from 'react-hook-form';
+import { object, string, email as vEmail, minLength, nonEmpty, pipe, trim } from 'valibot';
+import { valibotResolver } from '@hookform/resolvers/valibot';
 
 // Icons
 import Visibility from '@mui/icons-material/Visibility';
@@ -46,6 +50,12 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
   }
 }));
 
+// Validation Schema (Valibot)
+const loginSchema = object({
+  email: pipe(string(), trim(), minLength(1, 'This field is required'), vEmail('Please enter a valid email address')),
+  password: pipe(string(), trim(), nonEmpty('This field is required'), minLength(5, 'Password must be at least 5 characters long'))
+});
+
 export const LoginPage = () => {
   // States
   const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -55,6 +65,17 @@ export const LoginPage = () => {
   const theme = useTheme();
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show);
+
+  const resolver = valibotResolver(loginSchema) as unknown as Resolver<{ email: string; password: string }>;
+  const { control, handleSubmit, formState: { errors } } = useForm<{ email: string; password: string }>({
+    resolver,
+    defaultValues: { email: '', password: '' }
+  });
+
+  const onSubmit = () => {
+    localStorage.setItem('isAuthenticated', 'true');
+    navigate('/');
+  };
 
   return (
     <Box className='flex min-h-screen'>
@@ -82,46 +103,62 @@ export const LoginPage = () => {
           <form
             noValidate
             autoComplete='off'
-            onSubmit={e => {
-              e.preventDefault();
-              localStorage.setItem('isAuthenticated', 'true');
-              navigate('/');
-            }}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <Box className='flex flex-col gap-5'>
-              <CustomTextField
-                autoFocus
-                fullWidth
-                label='Email or Username'
-                placeholder='Enter your email or username'
+              <Controller
+                name='email'
+                control={control}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    fullWidth
+                    autoFocus
+                    type='email'
+                    label='Email'
+                    placeholder='Enter your email'
+                    error={!!errors.email}
+                    helperText={errors.email?.message}
+                  />
+                )}
               />
-              <CustomTextField
-                fullWidth
-                label='Password'
-                placeholder='············'
-                type={isPasswordShown ? 'text' : 'password'}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton
-                        edge='end'
-                        onClick={handleClickShowPassword}
-                        onMouseDown={e => e.preventDefault()}
-                      >
-                        {isPasswordShown ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
+              <Controller
+                name='password'
+                control={control}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    fullWidth
+                    label='Password'
+                    placeholder='············'
+                    type={isPasswordShown ? 'text' : 'password'}
+                    error={!!errors.password}
+                    helperText={errors.password?.message}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <IconButton
+                            edge='end'
+                            onClick={handleClickShowPassword}
+                            onMouseDown={e => e.preventDefault()}
+                            aria-label='toggle password visibility'
+                          >
+                            {isPasswordShown ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                )}
               />
               <Box className='flex justify-between items-center flex-wrap gap-x-3 gap-y-1'>
                 <FormControlLabel control={<Checkbox />} label='Remember me' />
-                <Link href='#' underline='none' color='primary'>
+                <Link href='/forgot-password' underline='none' color='primary'>
                   Forgot password?
                 </Link>
               </Box>
               <Button fullWidth variant='contained' type='submit'>
-                Login
+                Log In
               </Button>
               <Box className='flex justify-center items-center flex-wrap gap-2'>
                 <Typography>New on our platform?</Typography>
