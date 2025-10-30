@@ -18,16 +18,16 @@ export const CounterPage = () => {
           </div>
           
           <div className="flex flex-wrap gap-3 justify-center">
-            <Button onClick={() => dispatch(decrement())} variant="secondary">
+            <Button onClick={() => dispatch(decrement())} color="secondary">
               Decrement
             </Button>
             <Button onClick={() => dispatch(increment())}>
               Increment
             </Button>
-            <Button onClick={() => dispatch(incrementByAmount(5))} variant="outline">
+            <Button onClick={() => dispatch(incrementByAmount(5))} variant="outlined">
               Add 5
             </Button>
-            <Button onClick={() => dispatch(reset())} variant="secondary">
+            <Button onClick={() => dispatch(reset())} color="secondary">
               Reset
             </Button>
           </div>

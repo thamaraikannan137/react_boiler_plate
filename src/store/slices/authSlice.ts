@@ -38,7 +38,7 @@ export const login = createAsyncThunk(
       const data = await response.json();
       localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, data.token);
       return data;
-    } catch (error) {
+    } catch {
       return rejectWithValue('Invalid credentials');
     }
   }
