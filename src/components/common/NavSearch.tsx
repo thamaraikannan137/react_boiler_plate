@@ -133,12 +133,17 @@ const NavSearch = () => {
             display: 'flex',
             alignItems: 'center',
             gap: 1,
+            columnGap: 1.25,
             cursor: 'pointer',
             px: 1.5,
             py: 0.5,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
+            // Wider on desktop, auto on mobile
+            minWidth: { sm: 260, md: 340 },
+            width: { sm: 260, md: 340 },
+            flexShrink: 0,
             transition: 'all 0.2s',
             '&:hover': {
               borderColor: 'primary.main',
@@ -147,7 +152,11 @@ const NavSearch = () => {
           }}
         >
           <SearchIcon fontSize="small" />
-          <Typography variant="body2" color="text.secondary" sx={{ userSelect: 'none' }}>
+          <Typography 
+            variant="body2" 
+            color="text.secondary" 
+            sx={{ userSelect: 'none', ml: 0.5, flexGrow: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+          >
             Search
           </Typography>
           <Typography
@@ -159,6 +168,8 @@ const NavSearch = () => {
               borderRadius: 0.5,
               fontFamily: 'monospace',
               fontSize: '0.75rem',
+              ml: 'auto',
+              display: { xs: 'none', sm: 'inline-flex' }
             }}
           >
             ⌘K
