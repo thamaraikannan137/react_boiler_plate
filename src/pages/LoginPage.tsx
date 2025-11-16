@@ -17,6 +17,7 @@ import Link from '@mui/material/Link';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import loginIllustration from '../assets/images/auth-v2-mask-light.png';
 
 // Icons - using RemixIcon
 
@@ -78,7 +79,7 @@ export const LoginPage = () => {
         }}
       >
         <LoginIllustration
-          src='/images/illustrations/login.png'
+          src={loginIllustration}
           alt='login-illustration'
           className={theme.direction === 'rtl' ? 'scale-x-[-1]' : ''}
         />

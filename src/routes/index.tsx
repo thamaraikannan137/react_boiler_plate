@@ -4,8 +4,7 @@ import { HomePage } from "../pages/HomePage";
 import { AboutPage } from "../pages/AboutPage";
 import { LoginPage } from "../pages/LoginPage";
 import { RegisterPage } from "../pages/RegisterPage";
-import { CounterPage } from "../pages/CounterPage";
-import { ThemeExamplePage } from "../pages/ThemeExamplePage";
+
 
 const router = createBrowserRouter([
   {
@@ -20,15 +19,7 @@ const router = createBrowserRouter([
       {
         path: "about",
         element: <AboutPage />,
-      },
-      {
-        path: "counter",
-        element: <CounterPage />,
-      },
-      {
-        path: "theme-example",
-        element: <ThemeExamplePage />,
-      },
+      }
     ],
   },
   {

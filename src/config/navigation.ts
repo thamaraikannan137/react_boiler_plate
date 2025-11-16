@@ -19,16 +19,6 @@ export const navigationItems: NavItemType[] = [
     icon: 'Info',
   },
   {
-    title: 'Counter',
-    path: '/counter',
-    icon: 'Calculate',
-  },
-  {
-    title: 'Theme Example',
-    path: '/theme-example',
-    icon: 'Palette',
-  },
-  {
     title: 'Login',
     path: '/login',
     icon: 'Login',
