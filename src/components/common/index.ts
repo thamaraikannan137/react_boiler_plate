@@ -7,6 +7,7 @@ export { MuiCard } from './MuiCard';
 export { ThemeToggle } from './ThemeToggle';
 export { default as CustomAvatar } from './CustomAvatar';
 export { default as NavSearch } from './NavSearch';
+export { default as Icon } from './Icon';
 
 // Also export with simple names for convenience
 export { MuiButton as Button } from './MuiButton';

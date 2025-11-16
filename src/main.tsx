@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import { ThemeProvider } from './contexts/ThemeContext'
 import './index.css'
+import './assets/icons/icons.css'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(

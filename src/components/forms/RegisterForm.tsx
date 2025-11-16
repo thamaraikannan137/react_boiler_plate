@@ -9,8 +9,6 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 // Define validation schema
 const registerSchema = z.object({
@@ -101,7 +99,7 @@ export const RegisterForm = () => {
                   onMouseDown={e => e.preventDefault()}
                   aria-label="toggle password visibility"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {showPassword ? <i className="ri-eye-off-line" /> : <i className="ri-eye-line" />}
                 </IconButton>
               </InputAdornment>
             )
@@ -124,7 +122,7 @@ export const RegisterForm = () => {
                   onMouseDown={e => e.preventDefault()}
                   aria-label="toggle confirm password visibility"
                 >
-                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  {showConfirmPassword ? <i className="ri-eye-off-line" /> : <i className="ri-eye-line" />}
                 </IconButton>
               </InputAdornment>
             )

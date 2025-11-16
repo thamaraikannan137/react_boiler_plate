@@ -13,15 +13,6 @@ import {
   Alert,
   LinearProgress,
 } from '@mui/material';
-import {
-  Favorite,
-  Share,
-  Star,
-  Info,
-  Warning,
-  CheckCircle,
-  Error as ErrorIcon,
-} from '@mui/icons-material';
 
 export const ThemeExamplePage = () => {
   return (
@@ -73,7 +64,7 @@ export const ThemeExamplePage = () => {
             <Button variant="text" color="primary">
               Text
             </Button>
-            <Button variant="contained" color="secondary" startIcon={<Favorite />}>
+            <Button variant="contained" color="secondary" startIcon={<i className="ri-heart-line" />}>
               With Icon
             </Button>
             <Button variant="contained" color="success">
@@ -122,8 +113,8 @@ export const ThemeExamplePage = () => {
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small" startIcon={<Share />}>Share</Button>
-                <Button size="small" startIcon={<Star />}>Star</Button>
+                <Button size="small" startIcon={<i className="ri-share-line" />}>Share</Button>
+                <Button size="small" startIcon={<i className="ri-star-line" />}>Star</Button>
               </CardActions>
             </Card>
             <Card elevation={3} sx={{ flex: 1 }}>
@@ -176,16 +167,16 @@ export const ThemeExamplePage = () => {
             Alerts
           </Typography>
           <Stack spacing={2} sx={{ mt: 2 }}>
-            <Alert icon={<CheckCircle />} severity="success">
+            <Alert icon={<i className="ri-checkbox-circle-line" />} severity="success">
               This is a success alert
             </Alert>
-            <Alert icon={<Info />} severity="info">
+            <Alert icon={<i className="ri-information-line" />} severity="info">
               This is an info alert
             </Alert>
-            <Alert icon={<Warning />} severity="warning">
+            <Alert icon={<i className="ri-alert-line" />} severity="warning">
               This is a warning alert
             </Alert>
-            <Alert icon={<ErrorIcon />} severity="error">
+            <Alert icon={<i className="ri-error-warning-line" />} severity="error">
               This is an error alert
             </Alert>
           </Stack>
@@ -204,7 +195,7 @@ export const ThemeExamplePage = () => {
             <Chip label="Error" color="error" />
             <Chip label="Clickable" color="primary" onClick={() => alert('Clicked!')} />
             <Chip label="Deletable" color="secondary" onDelete={() => alert('Deleted!')} />
-            <Chip icon={<Favorite />} label="With Icon" color="primary" />
+            <Chip icon={<i className="ri-heart-line" />} label="With Icon" color="primary" />
           </Stack>
         </Paper>
 

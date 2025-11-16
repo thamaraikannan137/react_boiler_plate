@@ -181,7 +181,6 @@ const NavSearch = () => {
       <CommandDialog 
         open={open} 
         onOpenChange={setOpen}
-        modal
       >
         <Command
           style={{

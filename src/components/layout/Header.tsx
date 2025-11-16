@@ -8,7 +8,6 @@ import {
   useTheme, 
   useMediaQuery 
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import { useAppSelector } from '../../store';
 import { navigationItems } from '../../config/navigation';
 import { CustomAvatar, ThemeToggle, NavSearch } from '../common';
@@ -51,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({ onDrawerToggle }) => {
               mr: 1
             }}
           >
-            <MenuIcon />
+            <i className="ri-menu-line" />
           </IconButton>
         )}
         <Typography variant="h6" component="h1" noWrap>

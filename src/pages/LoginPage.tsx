@@ -18,13 +18,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-// Icons
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import GoogleIcon from '@mui/icons-material/Google';
+// Icons - using RemixIcon
 
 // Styled Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -141,7 +135,7 @@ export const LoginPage = () => {
                             onMouseDown={e => e.preventDefault()}
                             aria-label='toggle password visibility'
                           >
-                            {isPasswordShown ? <VisibilityOff /> : <Visibility />}
+                            {isPasswordShown ? <i className="ri-eye-off-line" /> : <i className="ri-eye-line" />}
                           </IconButton>
                         </InputAdornment>
                       )
@@ -167,16 +161,16 @@ export const LoginPage = () => {
               <Divider>or</Divider>
               <Box className='flex justify-center items-center gap-1.5'>
                 <IconButton color='primary' size='small'>
-                  <FacebookIcon />
+                  <i className="ri-facebook-fill" style={{ fontSize: '1.25rem' }} />
                 </IconButton>
                 <IconButton color='info' size='small'>
-                  <TwitterIcon />
+                  <i className="ri-twitter-x-fill" style={{ fontSize: '1.25rem' }} />
                 </IconButton>
                 <IconButton size='small'>
-                  <GitHubIcon />
+                  <i className="ri-github-fill" style={{ fontSize: '1.25rem' }} />
                 </IconButton>
                 <IconButton color='error' size='small'>
-                  <GoogleIcon />
+                  <i className="ri-google-fill" style={{ fontSize: '1.25rem' }} />
                 </IconButton>
               </Box>
             </Box>

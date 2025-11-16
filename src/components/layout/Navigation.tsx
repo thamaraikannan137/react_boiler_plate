@@ -13,18 +13,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import {
-  Dashboard,
-  Home,
-  Info,
-  Calculate,
-  Palette,
-  Login,
-  PersonAdd,
-  Settings,
-} from '@mui/icons-material';
 
 // Hook Imports
 import { useNavigation } from '../../hooks/useNavigation';
@@ -36,14 +24,14 @@ const { navWidth: drawerWidth, collapsedWidth } = navigationConfig;
 
 // Icon mapping
 const iconMap: { [key: string]: React.ReactNode } = {
-  Dashboard: <Dashboard />,
-  Home: <Home />,
-  Info: <Info />,
-  Calculate: <Calculate />,
-  Palette: <Palette />,
-  Login: <Login />,
-  PersonAdd: <PersonAdd />,
-  Settings: <Settings />,
+  Dashboard: <i className="ri-dashboard-line" />,
+  Home: <i className="ri-home-line" />,
+  Info: <i className="ri-information-line" />,
+  Calculate: <i className="ri-calculator-line" />,
+  Palette: <i className="ri-palette-line" />,
+  Login: <i className="ri-login-box-line" />,
+  PersonAdd: <i className="ri-user-add-line" />,
+  Settings: <i className="ri-settings-3-line" />,
 };
 
 const StyledDrawer = styled(Drawer)(({ theme }) => ({
@@ -131,9 +119,9 @@ export const Navigation: React.FC<NavigationProps> = ({ open = false, onClose })
           <Box sx={{ display: 'flex', gap: 1 }}>
             <IconButton onClick={togglePin} sx={{ color: isPinned ? 'primary.main' : 'text.secondary' }}>
               {isPinned ? (
-                <RadioButtonCheckedIcon />
+                <i className="ri-radio-button-line text-xl" />
               ) : (
-                <RadioButtonUncheckedIcon />
+                <i className="ri-checkbox-blank-circle-line text-xl" />
               )}
             </IconButton>
             {/* <IconButton onClick={toggleCollapse}>
@@ -177,6 +165,7 @@ export const Navigation: React.FC<NavigationProps> = ({ open = false, onClose })
                     mr: isCollapsed && !isHovered ? 0 : 2,
                     justifyContent: 'center',
                     color: location.pathname === item.path ? 'primary.main' : 'text.secondary',
+                    fontSize: '22px',
                     transition: theme => theme.transitions.create('color', {
                       duration: theme.transitions.duration.standard,
                       easing: theme.transitions.easing.easeInOut
